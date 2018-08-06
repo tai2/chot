@@ -1,0 +1,40 @@
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#app {
+  height: 100%;
+}
+
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  align-content: stretch;
+}
+
+.app__start-number-row {
+  flex: none;
+}
+
+.app__display-select-row {
+  flex: none;
+}
+
+.app__dir-picker-row {
+  flex: none;
+}
+
+.app__ss-button {
+  flex: auto;
+  margin: 5px;
+}
+
