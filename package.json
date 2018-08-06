@@ -41,6 +41,7 @@
     "webpack": "^4.8.3"
   },
   "resolutions": {
-    "webpack-sources": "1.0.1"
+    "webpack-sources": "1.0.1",
+    "upath": "^1.1.0"
   }
 }
