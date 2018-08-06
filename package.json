@@ -1,12 +1,23 @@
 {
   "name": "chot",
   "version": "0.0.1",
+  "author": "tai2",
+  "description": "Serial desktop screenshots made easy",
   "license": "MIT",
   "scripts": {
     "dev": "electron-webpack dev",
     "compile": "electron-webpack",
     "dist": "yarn compile && electron-builder",
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
+  },
+  "build": {
+    "appId": "net.tai2.chot",
+    "mac": {
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "category": "Utility"
+    }
   },
   "electronWebpack": {
     "renderer": {
