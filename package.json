@@ -10,6 +10,7 @@
     "dist": "yarn compile && electron-builder",
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
   },
+  "repository": "github:tai2/chot",
   "build": {
     "appId": "net.tai2.chot",
     "mac": {
