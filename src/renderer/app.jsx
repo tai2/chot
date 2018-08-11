@@ -6,6 +6,10 @@ const { app, dialog, globalShortcut } = require('electron').remote
 
 localStorage.storeDir = localStorage.storeDir || app.getPath('desktop')
 
+addEventListener('beforeunload', () => {
+  globalShortcut.unregister('CommandOrControl+Shift+Alt+3')
+})
+
 export default class App extends React.Component {
   constructor(props) {
     super(props)
@@ -23,9 +27,6 @@ export default class App extends React.Component {
     globalShortcut.register('CommandOrControl+Shift+Alt+3', () => {
       this.takeScreenshot()
     })
-  }
-  componentWillUnmount() {
-    globalShortcut.unregister('CommandOrControl+Shift+Alt+3')
   }
   takeScreenshot = () => {
     takeScreenshot(this.state.storeDir, this.state.selectedDisplay, this.state.startNumber)
