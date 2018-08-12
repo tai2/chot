@@ -1,6 +1,6 @@
 import React from 'react'
 import screenshot from 'screenshot-desktop'
-import takeScreenshot from './screenshot'
+import { takeScreenshot, makeNextFilename } from './screenshot'
 
 const { app, dialog, globalShortcut } = require('electron').remote
 
@@ -15,6 +15,7 @@ export default class App extends React.Component {
     super(props)
     this.state = {
       storeDir: localStorage.storeDir,
+      nextFilename: '',
       displays: [],
       selectedDisplay: 0,
       startNumber: 1,
@@ -27,9 +28,12 @@ export default class App extends React.Component {
     globalShortcut.register('CommandOrControl+Shift+Alt+3', () => {
       this.takeScreenshot()
     })
+    makeNextFilename(this.state.storeDir, this.state.startNumber).then(nextFilename => this.setState({ nextFilename }))
   }
-  takeScreenshot = () => {
-    takeScreenshot(this.state.storeDir, this.state.selectedDisplay, this.state.startNumber)
+  takeScreenshot = async () => {
+    await takeScreenshot(this.state.selectedDisplay, this.state.storeDir, this.state.startNumber)
+    const nextFilename = await makeNextFilename(this.state.storeDir, this.state.startNumber)
+    this.setState({ nextFilename })
   }
   handleStartNumberChange = (ev) => {
     this.setState({ startNumber: parseInt(ev.target.value, 10) })
@@ -53,6 +57,10 @@ export default class App extends React.Component {
         <div className="app__start-number-row">
           <label htmlFor="start-number-input">Start number:</label>
           <input id="start-number-input" type="number" value={this.state.startNumber} onChange={this.handleStartNumberChange} />
+        </div>
+        <div className="app__filename-preview-row">
+          <label>Next Filename:</label>
+          {this.state.nextFilename}
         </div>
         <div className="app__display-select-row">
           <label htmlFor="display-select">Display:</label>

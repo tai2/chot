@@ -21,7 +21,7 @@ function readdir(dirPath, options) {
   })
 }
 
-async function makeNextFilename(dirPath, startNumber) {
+export async function makeNextFilename(dirPath, startNumber) {
   const files = await readdir(dirPath, 'utf8')
   const nums = files
     .map(file => FILENAME_REGEX.exec(file))
@@ -32,7 +32,7 @@ async function makeNextFilename(dirPath, startNumber) {
   return `${FILENAME_BASE}${nextNum}.${FILENAME_EXT}`
 }
 
-export default async function takeScreenshot(dirPath, displayId, startNumber) {
+export async function takeScreenshot(displayId, dirPath, startNumber) {
   shutterSound.play()
 
   const nextFilename = await makeNextFilename(dirPath, startNumber)
