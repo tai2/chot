@@ -28,11 +28,18 @@ export default class App extends React.Component {
     globalShortcut.register('CommandOrControl+Shift+Alt+3', () => {
       this.takeScreenshot()
     })
-    makeNextFilename(this.state.storeDir, this.state.startNumber).then(nextFilename => this.setState({ nextFilename }))
+    makeNextFilename({
+      dirPath: this.state.storeDir,
+      startNumber: this.state.startNumber
+    }).then(nextFilename => this.setState({ nextFilename }))
   }
   takeScreenshot = async () => {
-    await takeScreenshot(this.state.selectedDisplay, this.state.storeDir, this.state.startNumber)
-    const nextFilename = await makeNextFilename(this.state.storeDir, this.state.startNumber)
+    const ctx = {
+      dirPath: this.state.storeDir,
+      startNumber: this.state.startNumber
+    }
+    await takeScreenshot(this.state.selectedDisplay, ctx)
+    const nextFilename = await makeNextFilename(ctx)
     this.setState({ nextFilename })
   }
   handleStartNumberChange = (ev) => {
