@@ -29,7 +29,7 @@ export async function makeNextFilename(ctx) {
     .map(match => parseInt(match[1], 10))
 
   const nextNum = Math.max(...nums, ctx.startNumber - 1) + 1
-  return `${FILENAME_BASE}${nextNum}.${FILENAME_EXT}`
+  return `${ctx.prefix}${FILENAME_BASE}${nextNum}.${FILENAME_EXT}`
 }
 
 export async function takeScreenshot(displayId, ctx) {

@@ -5,6 +5,7 @@ import { takeScreenshot, makeNextFilename } from './screenshot'
 const { app, dialog, globalShortcut } = require('electron').remote
 
 localStorage.storeDir = localStorage.storeDir || app.getPath('desktop')
+localStorage.prefix = localStorage.prefix !== undefined ? localStorage.prefix : 'screenshot'
 
 addEventListener('beforeunload', () => {
   globalShortcut.unregister('CommandOrControl+Shift+Alt+3')
@@ -15,6 +16,7 @@ export default class App extends React.Component {
     super(props)
     this.state = {
       storeDir: localStorage.storeDir,
+      prefix: localStorage.prefix,
       nextFilename: '',
       displays: [],
       selectedDisplay: 0,
@@ -28,22 +30,30 @@ export default class App extends React.Component {
     globalShortcut.register('CommandOrControl+Shift+Alt+3', () => {
       this.takeScreenshot()
     })
-    makeNextFilename({
+    this.refreshPreview()
+  }
+  refreshPreview = async () => {
+    const nextFilename = await makeNextFilename({
+      prefix: this.state.prefix,
       dirPath: this.state.storeDir,
       startNumber: this.state.startNumber
-    }).then(nextFilename => this.setState({ nextFilename }))
+    })
+    this.setState({ nextFilename })
   }
   takeScreenshot = async () => {
     const ctx = {
+      prefix: this.state.prefix,
       dirPath: this.state.storeDir,
       startNumber: this.state.startNumber
     }
     await takeScreenshot(this.state.selectedDisplay, ctx)
-    const nextFilename = await makeNextFilename(ctx)
-    this.setState({ nextFilename })
+    this.refreshPreview()
   }
   handleStartNumberChange = (ev) => {
-    this.setState({ startNumber: parseInt(ev.target.value, 10) })
+    this.setState({ startNumber: parseInt(ev.target.value, 10) }, this.refreshPreview)
+  }
+  handlePrefixChange = (ev) => {
+    this.setState({ prefix: ev.target.value }, this.refreshPreview)
   }
   handleDisplayChange = (ev) => {
     this.setState({ selectedDisplay: parseInt(ev.target.value, 10) })
@@ -61,6 +71,10 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="app">
+        <div className="app__prefix-row">
+          <label htmlFor="prefix-input">Prefix:</label>
+          <input id="prefix-input" type="text" onChange={this.handlePrefixChange} />
+        </div>
         <div className="app__start-number-row">
           <label htmlFor="start-number-input">Start number:</label>
           <input id="start-number-input" type="number" value={this.state.startNumber} onChange={this.handleStartNumberChange} />
